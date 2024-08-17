@@ -31,17 +31,26 @@ const App = () => {
     });
   };
 
+  const getOverallScore = () => {
+    return localStorage.getItem("overallScore") === null
+      ? 0
+      : parseInt(localStorage.getItem("overallScore"));
+  };
+
+  const getCurrentScore = () => {
+    return quizData.questions.filter((quest) => quest.answer === 1).length;
+  };
+
   const handleNextQuestion = () => {
     // handling the next question arrow click
     // if it is the last question show end screen
     if (currentQuestion === questions.length - 1) {
       setShowEndScreen(true);
-      let currentOverallScore = parseInt(localStorage.getItem("overallScore"));
+      const currentOverallScore = getOverallScore();
       // update overall score by fetching from local storage and adding the current score
       localStorage.setItem(
         "overallScore",
-        currentOverallScore +
-          quizData.questions.filter((quest) => quest.answer === 1).length
+        currentOverallScore + getCurrentScore()
       );
       return;
     }
@@ -67,22 +76,19 @@ const App = () => {
     });
   };
 
-  const currentScore = quizData.questions.filter(
-    (quest) => quest.answer === 1
-  ).length;
-
-  const overallScore = parseInt(localStorage.getItem("overallScore"));
-
   return (
     <div className="main__wrap">
       <main className="container">
         {showEndScreen ? (
-          <QuizEnd currentScore={currentScore} overallScore={overallScore} />
+          <QuizEnd
+            currentScore={getCurrentScore()}
+            overallScore={getOverallScore()}
+          />
         ) : (
           <>
             <div className="score__container">
-              <h4>{`Current Score: ${currentScore}`}</h4>
-              <h4>{`Overall Score: ${overallScore}`}</h4>
+              <h4>{`Current Score: ${getCurrentScore()}`}</h4>
+              <h4>{`Overall Score: ${getOverallScore()}`}</h4>
             </div>
             <QuestionComponent
               currentQuestion={currentQuestion}

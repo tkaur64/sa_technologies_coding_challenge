@@ -33,7 +33,7 @@ function QuestionComponent({
           Yes
         </button>
         <button
-          className={!question.answer ? "active" : ""}
+          className={question.answer === 0 ? "active" : ""}
           onClick={() => handleAnswerClick(0)}
         >
           No
