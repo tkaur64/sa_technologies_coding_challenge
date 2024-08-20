@@ -5,17 +5,24 @@ import {
   faCircleArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
-function QuestionComponent({
+type QuestionComponentProps = {
+  currentQuestion: number;
+  question: { id: number; question: string; answer: number | null };
+  handleAnswerClick: (ans: number) => void;
+  handleNextQuestion: () => void;
+  handlePreviousQuestion: () => void;
+};
+
+const QuestionComponent: React.FC<QuestionComponentProps> = ({
   currentQuestion,
   question,
   handleAnswerClick,
   handleNextQuestion,
   handlePreviousQuestion,
-}) {
+}) => {
   // variable to correctly display the question number
-  const questionNumberDisplay = `${
-    currentQuestion >= 9 ? currentQuestion : `0${currentQuestion}`
-  }`;
+  const questionNumberDisplay = `${currentQuestion >= 9 ? currentQuestion : `0${currentQuestion}`
+    }`;
 
   return (
     <>
@@ -25,6 +32,7 @@ function QuestionComponent({
         <FontAwesomeIcon
           icon={faCircleArrowLeft}
           onClick={handlePreviousQuestion}
+          data-testid="previous-icon"
         />
         <button
           className={question.answer ? "active" : ""}
@@ -41,6 +49,7 @@ function QuestionComponent({
         <FontAwesomeIcon
           icon={faCircleArrowRight}
           onClick={handleNextQuestion}
+          data-testid="next-icon"
         />
       </div>
     </>

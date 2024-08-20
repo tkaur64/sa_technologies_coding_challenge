@@ -4,20 +4,31 @@ import { QUESTIONS } from "./questions";
 import QuizEnd from "./QuizEnd";
 import QuestionComponent from "./QuestionComponent";
 
-const App = () => {
-  const [quizData, setQuizData] = useState({
-    questions: Object.keys(QUESTIONS).map((quest) => {
-      return { id: parseInt(quest), question: QUESTIONS[quest], answer: null };
-    }),
+type Question = {
+  id: number,
+  question: string,
+  answer: number | null;
+};
+type QuizData = {
+  questions: Question[],
+  currentQuestion: number,
+};
+const App: React.FC = () => {
+  const [quizData, setQuizData] = useState<QuizData>({
+    questions: Object.keys(QUESTIONS).map((quest) => ({
+      id: parseInt(quest),
+      question: QUESTIONS[parseInt(quest)],
+      answer: null,
+    })) as Question[],  // Assert this as an array of Question objects
     currentQuestion: 1,
   });
-  const [showEndScreen, setShowEndScreen] = useState(false);
+  const [showEndScreen, setShowEndScreen] = useState<boolean>(false);
 
   const { questions, currentQuestion } = quizData;
 
-  const handleAnswerClick = (ans) => {
+  const handleAnswerClick = (ans: number) => {
     // function to update the answer as selected by user
-    setQuizData((quizData) => {
+    setQuizData((quizData: QuizData) => {
       return {
         ...quizData,
         questions: quizData.questions.map((quest) => {
@@ -32,9 +43,10 @@ const App = () => {
   };
 
   const getOverallScore = () => {
-    return localStorage.getItem("overallScore") === null
+    const overallScore = localStorage.getItem("overallScore")
+    return overallScore === null
       ? 0
-      : parseInt(localStorage.getItem("overallScore"));
+      : parseInt(overallScore);
   };
 
   const getCurrentScore = () => {
@@ -44,14 +56,12 @@ const App = () => {
   const handleNextQuestion = () => {
     // handling the next question arrow click
     // if it is the last question show end screen
-    if (currentQuestion === questions.length - 1) {
+    if (currentQuestion === questions.length) {
       setShowEndScreen(true);
       const currentOverallScore = getOverallScore();
       // update overall score by fetching from local storage and adding the current score
-      localStorage.setItem(
-        "overallScore",
-        currentOverallScore + getCurrentScore()
-      );
+      const newOverallScore = currentOverallScore + getCurrentScore()
+      localStorage.setItem("overallScore", String(newOverallScore));
       return;
     }
     setQuizData((quizData) => {

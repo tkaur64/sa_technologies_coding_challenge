@@ -1,4 +1,12 @@
-const QuizEnd = ({ currentScore, overallScore }) => {
+import React from "react";
+
+type QuizEndProps = {
+  currentScore: number;
+  overallScore: number;
+};
+
+
+const QuizEnd: React.FC<QuizEndProps> = ({ currentScore, overallScore }) => {
   return (
     <div className="end__screen">
       <h4>Quiz has ended!!!</h4>
